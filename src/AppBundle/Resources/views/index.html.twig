@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        {{ "now"|date("F") }}
+        <table class="table table-dark">
+            <tr>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+            </tr>
+            {% for week in currentMonth %}
+                <tr>
+                    {% for date,day in week %}
+                        <td class="size">
+                            {% if not day == 'EMPTY' %}
+                                <div class="calendar-day">{{ date | date('d') }}</div>
+                            {% endif %}
+                        {% for event in day %}
+                        <div  class="alert alert-success">
+                            {{ event.start|date }}
+                        </div>
+                        {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
+
