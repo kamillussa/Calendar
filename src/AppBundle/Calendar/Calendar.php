@@ -68,10 +68,10 @@ class Calendar
     {
 
         $timeSlotArray = []; //collection array
-        for ($i = $this->timeFrame->getStart(); $i < $this->timeFrame->getEnd(); $i+=300) {
+        for ($i = $this->timeFrame->getStart(); $i < $this->timeFrame->getEnd(); $i+=1800) {
             //More results
             //$timeSlot = date('H:i', $i) . "-" . date('H:i', ($i + $this->duration));
-            $timeSlot = date('H', $i) . "-" . date('H', ($i + $this->duration));
+            $timeSlot = date('H:i d.m.Y', $i) . "-" . date('H:i d.m.Y', ($i + $this->duration));
             $frameStart = $i;
             $frameEnd = $i + $this->duration;
             foreach ($this->getEventsByUsername() as $user => $events) {

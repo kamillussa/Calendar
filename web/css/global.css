@@ -14,10 +14,10 @@ table, th, td {
     border: 1px solid black;
 }
 
-#div1 {
+.div {
     display: inline-block;
-}
+    float: left;
+    padding:20px;
+    width: 500px;
 
-#div2 {
-    display: inline-block;
 }

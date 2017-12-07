@@ -1,28 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div>
-    <div id="div1">
-        <label>You can schedule meeting for users between</label><br>
-        {% for key,event in slotsArray %}
-            {{ key }}:<br>
-            {% for username,value in event %}
-                {% if username == true %}
-                    {{ username }}<br>
-                {% endif %}
+    <div class="container">
+        <div class="div">
+            <label>You can schedule meeting:</label><br>
+            {% for key,event in slotsArray %}
+                {% set string = key|split('-') %}
+                <form action="/createMeetingForAll" method="POST">
+                    <input type="string" name="startDate" value="{{ string[0] }}">-
+                    <input type="string" name="endDate" value="{{ string[1] }}"><br>
+                    {% for username,value in event %}
+                        {% if username == true %}
+                            <input type="string" name="{{ username }}" value="{{ username }}"><br>
+
+                        {% endif %}
+                    {% endfor %}
+                    <label>Description:</label><br>
+                    <textarea name="description" rows="2" cols="20"></textarea><br>
+                    <input class="btn btn-dark" type="submit" value="Schedule">
+                </form>
             {% endfor %}
-        {% endfor %}
-    </div>
-    <div id="div2">
-        <label>Users who can not schedule at this time frame</label><br>
-        {% for key,event in slotsArray %}
-            {{ key }}:<br>
-            {% for username,value in event %}
-                {% if username == false %}
-                    {{ username }}<br>
-                {% endif %}
+        </div>
+        <div class="div">
+            <label>Users who can not participate:</label><br>
+            {% for key,event in slotsArray %}
+                {{ key }}:<br>
+                {% for username,value in event %}
+                    {% if username == false %}
+                        {{ username }}<br>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    </div>
+        </div>
     </div>
 {% endblock %}

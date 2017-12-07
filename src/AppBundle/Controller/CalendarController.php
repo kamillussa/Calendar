@@ -78,9 +78,8 @@ class CalendarController extends Controller
         $eventsArray = $repository->findAllEventsByUsername();
         $calendar->setEventsArray($eventsArray);
         dump($calendar->getEventsByUsername());
-
         $data = $request->request->all();
-        $duration = $data['duration']*3600;
+        $duration = $data['duration'] * 3600;
         $calendar->setDuration($duration);
 
         $timeFrameStart = date_timestamp_get(new \DateTime($data['startDate']." ".$data['startTime']));
@@ -91,6 +90,35 @@ class CalendarController extends Controller
         dump($slotsArray);
 
         return $this->render('AppBundle::find_slot.html.twig', array('slotsArray' => $slotsArray));
+    }
+
+    /**
+     * @Route("/createMeetingForAll")
+     */
+    public function createMeetingForAllAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+
+        $data = $request->request->all();
+        $startDate = new \DateTime($data['startDate']);
+        $endDate = new \DateTime($data['endDate']);
+        $userManager = $this->get('fos_user.user_manager');
+        foreach($data as $key => $value) {
+            if($userManager->findUserByUsername($data[$key]) != null) {
+                $user = $userManager->findUserByUsername($data[$key]);
+                $event = new Event();
+                $event->setUser($user);
+                $event->setStart($startDate);
+                $event->setEnd($endDate);
+                $event->setDescription($data['description']);
+                $event->setIsWorkHours(false);
+
+                $em->persist($event);
+                $em->flush();
+            }
+        }
+        return	$this->redirect("/");
     }
 
 }
