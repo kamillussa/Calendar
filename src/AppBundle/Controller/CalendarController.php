@@ -49,6 +49,7 @@ class CalendarController extends Controller
         $event->setStart($startDateTime);
         $event->setEnd($endDateTime);
         $event->setDescription($data['description']);
+        $event->setIsWorkHours(false);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($event);

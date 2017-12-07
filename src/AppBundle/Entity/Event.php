@@ -48,6 +48,28 @@ class Event
      */
     private $user;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="is_work_hours", type="boolean")
+     */
+    private $isWorkHours;
+
+    /**
+     * @return bool
+     */
+    public function isWorkHours(): bool
+    {
+        return $this->isWorkHours;
+    }
+
+    /**
+     * @param bool $isWorkHours
+     */
+    public function setIsWorkHours(bool $isWorkHours)
+    {
+        $this->isWorkHours = $isWorkHours;
+    }
+
 
     /**
      * Get id

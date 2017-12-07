@@ -61,6 +61,7 @@ class RegistrationController extends BaseController
                     $workHourEvent->setStart(new \DateTime(date('Y-m-d H:i:s', $eventStart)));
                     $workHourEvent->setEnd(new \DateTime(date('Y-m-d H:i:s', $eventEnd)));
                     $workHourEvent->setDescription('');
+                    $workHourEvent->setIsWorkHours(true);
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($workHourEvent);
                     $em->flush();

@@ -20,11 +20,17 @@
                             {% if not day == 'EMPTY' %}
                                 <div class="calendar-day">{{ date | date('d') }}</div>
                             {% endif %}
-                        {% for event in day %}
-                        <div  class="alert alert-success">
-                            {{ event.start|date }}
-                        </div>
-                        {% endfor %}
+                            {% for event in day %}
+                                {% if event.isWorkHours == false %}
+                                    <div class="alert alert-success">
+                                        {{ event.start|date('H:i') }}-{{ event.end|date('H:i') }}
+                                        <br>
+                                        {{ event.description }}
+                                    </div>
+                                {% else %}
+                                    <div class="calendar-day">{% set string = date|split('-') %} {{ string[2] }}</div>
+                                {% endif %}
+                            {% endfor %}
                         </td>
                     {% endfor %}
                 </tr>
