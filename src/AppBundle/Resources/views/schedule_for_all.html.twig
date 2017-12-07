@@ -2,6 +2,16 @@
 
 {% block body %}
     <div>
-
+        <label>Find empty time slot</label><br>
+        <form action="/findSlot" method="POST">
+            <label>Duration:</label><br>
+            <input type="number" step="0.5" min="0.5" name="duration" value=""><br>
+            <label>Time frame:</label><br>
+            <input type="date" name="startDate" value="">
+            <input type="time" name="startTime" value="">-
+            <input type="date" name="endDate" value="">
+            <input type="time" name="endTime" value=""><br><br>
+            <input type="submit" value="Find">
+        </form>
     </div>
 {% endblock %}

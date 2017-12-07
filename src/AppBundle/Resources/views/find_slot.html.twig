@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+    <div id="div1">
+        <label>You can schedule meeting for users between</label><br>
+        {% for key,event in slotsArray %}
+            {{ key }}:<br>
+            {% for username,value in event %}
+                {% if username == true %}
+                    {{ username }}<br>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div id="div2">
+        <label>Users who can not schedule at this time frame</label><br>
+        {% for key,event in slotsArray %}
+            {{ key }}:<br>
+            {% for username,value in event %}
+                {% if username == false %}
+                    {{ username }}<br>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

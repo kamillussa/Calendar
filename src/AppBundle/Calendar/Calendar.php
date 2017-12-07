@@ -3,11 +3,12 @@
 namespace AppBundle\Calendar;
 
 use AppBundle\Entity\Event;
+use AppBundle\Calendar\Event as E;
 
 class Calendar
 {
-    private $userArray;
-    private $durationTime;
+    private $eventsArray;
+    private $duration;
     private $timeFrame;
     private $events;
 
@@ -19,36 +20,29 @@ class Calendar
         $this->events = $events;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUserArray()
-    {
-        return $this->userArray;
-    }
 
     /**
-     * @param mixed $userArray
+     * @param mixed $eventsArray
      */
-    public function setUserArray(array $userArray)
+    public function setEventsArray(array $eventsArray)
     {
-        $this->userArray = $userArray;
+        $this->eventsArray = $eventsArray;
     }
 
     /**
      * @return mixed
      */
-    public function getDurationTime()
+    public function getDuration()
     {
-        return $this->durationTime;
+        return $this->duration;
     }
 
     /**
-     * @param mixed $durationTime
+     * @param mixed $duration
      */
-    public function setDurationTime(int $durationTime)
+    public function setDuration(int $duration)
     {
-        $this->durationTime = $durationTime;
+        $this->duration = $duration;
     }
 
     /**
@@ -60,28 +54,27 @@ class Calendar
     }
 
     /**
-     * @param mixed $timeFrame
+     * @param $timeFrame
      */
-    public function setTimeFrame(int $timeFrame)
+    public function setTimeFrame($timeFrame)
     {
         $this->timeFrame = $timeFrame;
     }
 
     /**
-     * @param $userArray
-     * @param $durationTime
-     * @param $timeFrame
      * @return array
      */
-    function findEmptySlot($userArray, $durationTime, $timeFrame)
+    public function findEmptySlot()
     {
 
         $timeSlotArray = []; //collection array
-        for ($i = $timeFrame->start; $i < $timeFrame->end; $i++) {
-            $timeSlot = $i . "-" . ($i + $durationTime);
+        for ($i = $this->timeFrame->getStart(); $i < $this->timeFrame->getEnd(); $i+=300) {
+            //More results
+            //$timeSlot = date('H:i', $i) . "-" . date('H:i', ($i + $this->duration));
+            $timeSlot = date('H', $i) . "-" . date('H', ($i + $this->duration));
             $frameStart = $i;
-            $frameEnd = $i + $durationTime;
-            foreach ($userArray as $user => $events) {
+            $frameEnd = $i + $this->duration;
+            foreach ($this->getEventsByUsername() as $user => $events) {
                 for ($j = 0; $j < count($events); $j++) {
                     $eventStart = $events[$j]->getStart();
                     $eventEnd = $events[$j]->getEnd();
@@ -96,7 +89,10 @@ class Calendar
         return $timeSlotArray;
     }
 
-    function getEventsByDate()
+    /**
+     * @return array
+     */
+    public function getEventsByDate()
     {
         $result = [];
         /** @var Event $event */
@@ -106,7 +102,10 @@ class Calendar
         return $result;
     }
 
-    function currentMonth()
+    /**
+     * @return array
+     */
+    public function currentMonth()
     {
         $maxDays = date('t');
         $output = [[]];
@@ -136,6 +135,19 @@ class Calendar
         return $output;
     }
 
-
-
+    /**
+     * @return array
+     */
+    public function getEventsByUsername()
+    {
+      $result = [];
+      $events = $this->eventsArray;
+      foreach ($events as $key => $value) {
+          $timestampStart = date_timestamp_get($value['start']);
+          $timestampEnd = date_timestamp_get($value['end']);
+          $event = new E($timestampStart, $timestampEnd);
+          $result[$value['username']][] = $event;
+      }
+      return $result;
+    }
 }

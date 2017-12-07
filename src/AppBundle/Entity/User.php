@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use	Symfony\Component\Validator\Constraints as Assert;
@@ -34,6 +35,11 @@ class User extends BaseUser
     protected $workHours;
 
     /**
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="user")
+     */
+    protected $events;
+
+    /**
      * @return mixed
      */
     public function getWorkHours()
@@ -52,6 +58,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->events = new ArrayCollection();
     }
 
 
@@ -64,5 +71,38 @@ class User extends BaseUser
     {
         return $this->id;
     }
-}
 
+    /**
+     * Add event
+     *
+     * @param \AppBundle\Entity\Event $event
+     *
+     * @return User
+     */
+    public function addEvent(\AppBundle\Entity\Event $event)
+    {
+        $this->events[] = $event;
+
+        return $this;
+    }
+
+    /**
+     * Remove event
+     *
+     * @param \AppBundle\Entity\Event $event
+     */
+    public function removeEvent(\AppBundle\Entity\Event $event)
+    {
+        $this->events->removeElement($event);
+    }
+
+    /**
+     * Get events
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+}

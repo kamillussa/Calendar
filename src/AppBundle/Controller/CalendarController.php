@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Calendar\Calendar;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Event;
+use AppBundle\Calendar\Event as E;
 
 class CalendarController extends Controller
 {
@@ -38,12 +39,12 @@ class CalendarController extends Controller
      */
     public function createMeetingAction(Request $request)
     {
-        $user = $this->getUser();
         $data = $request->request->all();
         $startDateTime = new \DateTime($data['startDate']." ".$data['startTime']);
         $endDateTime = new \DateTime($data['endDate']." ".$data['endTime']);
 
         $event = new Event();
+        $user = $this->getUser();
         $event->setUser($user);
         $event->setStart($startDateTime);
         $event->setEnd($endDateTime);
@@ -61,6 +62,34 @@ class CalendarController extends Controller
      */
     public function scheduleForAllAction()
     {
+
         return $this->render('AppBundle::schedule_for_all.html.twig', array());
     }
+
+    /**
+     * @Route("/findSlot")
+     */
+    public function findSlotAction(Request $request)
+    {
+        $calendar = new Calendar();
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:Event');
+        $eventsArray = $repository->findAllEventsByUsername();
+        $calendar->setEventsArray($eventsArray);
+        dump($calendar->getEventsByUsername());
+
+        $data = $request->request->all();
+        $duration = $data['duration']*3600;
+        $calendar->setDuration($duration);
+
+        $timeFrameStart = date_timestamp_get(new \DateTime($data['startDate']." ".$data['startTime']));
+        $timeFrameEnd = date_timestamp_get(new \DateTime($data['endDate']." ".$data['endTime']));
+        $timeFrame = new E($timeFrameStart, $timeFrameEnd);
+        $calendar->setTimeFrame($timeFrame);
+        $slotsArray = $calendar->findEmptySlot();
+        dump($slotsArray);
+
+        return $this->render('AppBundle::find_slot.html.twig', array('slotsArray' => $slotsArray));
+    }
+
 }

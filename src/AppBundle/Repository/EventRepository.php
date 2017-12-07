@@ -10,5 +10,12 @@ namespace AppBundle\Repository;
  */
 class EventRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllEventsByUsername()
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT e.start, e.end, u.username FROM AppBundle:Event e JOIN e.user AS u WHERE u.id>0");
+        $events = $query->getResult();
+        return $events;
 
+    }
 }
