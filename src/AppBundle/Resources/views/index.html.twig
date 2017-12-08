@@ -22,7 +22,7 @@
                             {% endif %}
                             {% for event in day %}
                                 {% if event.isWorkHours == false %}
-                                    <div class="alert alert-success">
+                                    <div class="alert alert-success event">
                                         {{ event.start|date('H:i') }}-{{ event.end|date('H:i') }}
                                         <br>
                                         {{ event.description }}
